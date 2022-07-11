@@ -10,3 +10,4 @@ repositorio criado para apresentar algoritmo para ab2 da disciplina de teoria do
      use -l <vertFinal> para indicar vertice final.
 ## O que o Algoritmo faz?
   O algoritmo de dijkstra consegue retornar o caminho minimo de um grafo com pesos positivos. De acordo com os parâmetros de entrada a saída pode ser com a soma dos pesos ou uma sequencia ordenada com o peso para cada vértice.
+## Use o arquivo exemplo.txt como entrada de exemplo.
