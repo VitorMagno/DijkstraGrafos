@@ -9,5 +9,5 @@ repositorio criado para apresentar algoritmo para ab2 da disciplina de teoria do
      use -i <vertInicial> para indicar vertice inicial.
      use -l <vertFinal> para indicar vertice final.
 ## O que o Algoritmo faz?
-  O algoritmo de dijkstra consegue retornar o caminho minimo de um grafo (nesse caso especifico, direcionado) com pesos positivos. De acordo com os parâmetros de entrada a saída pode ser com a soma dos pesos ou uma sequencia ordenada com o peso para cada vértice.
+  O algoritmo de dijkstra consegue retornar o caminho minimo de um grafo direcionado e não direcionado com pesos positivos, escolhi fazer o direcionado. De acordo com os parâmetros de entrada a saída pode ser com a soma dos pesos ou uma sequencia ordenada com o peso para cada vértice.
 ## Use o arquivo exemplo.txt como entrada de exemplo.
