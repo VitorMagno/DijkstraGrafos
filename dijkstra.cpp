@@ -40,12 +40,16 @@ void dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
     // para cada vizinho do elemento atual
     for (int j = 1; j < n; j++){
         if (G[u.second][j] != INT_MAX){
-            if (dist[j] > u.first + G[u.second][j]){
-                //cout<< dist[j] << " " << dist[u.second] << " " << G[u.second][j] << endl;
-                if(dist[u.second] == 100000) dist[u.second] = 0;
-                dist[j] = dist[u.second] + G[u.second][j];
-                pais[j] = u.second;
-                cout<< "de "<<pais[j] <<" a "<< j<<" peso: " << dist[j] <<endl;
+            if (dist[j] > u.first + G[u.second][j]){ // peso do vizinho j > peso do v atual + o caminho para j pelo vertice atual
+                //cout<< "distancia atual segundo o grafo: "<<u.first <<". distancia do "<<u.second << " para "<<j<<": "<<G[u.second][j]<<endl;
+                if(dist[j] == 100000) dist[j] = 0;
+                //cout << dist[u.second]<< endl;
+                dist[u.second] = u.first; // atualiza o peso do v atual 
+                //cout << dist[u.second]<< endl;
+                dist[j] = dist[u.second] + G[u.second][j]; // atualiza o peso do vizinho j 
+                pais[j] = u.second; // atualiza pai de j
+                //cout<< "vertice atual: "<<u.second <<". vizinho: "<< j << ". distancia pro vizinho: "<< dist[j] << ". distancia ate o momento: " << dist[u.second] << ". distancia no grafo[atual][vizinho]: " << G[u.second][j] << endl;
+                //cout<< "de "<<pais[j] <<" a "<< j<<" peso: " << dist[j] <<endl;
                 pq.push({dist[j], j});
                 //cout << "vizinho de " << u.second << ": " << j << ", com a dist na heap: " << dist.at(j) << endl;
             }
@@ -191,7 +195,7 @@ int main(int argc, char const *argv[]){
         int vert_orig = atoi(&buffer[0]);
         int vert_dest = atoi(&buffer[2]);
         int weight = atoi(&buffer[4]);
-        cout<< vert_orig << " " << vert_dest << " " << weight << endl; //== sem resposta
+        //cout<< vert_orig << " " << vert_dest << " " << weight << endl;
         
         // Atualiza o valor do peso da aresta saindo de vert_orig e indo para vert_dest.
         // cout<< "origem: " << vert_orig << "destino: "<< vert_dest << "peso: "<< G[vert_orig][vert_dest] << endl; == sem resposta
