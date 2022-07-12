@@ -14,13 +14,13 @@
 
 using namespace std;
 
-vector<int> dijkstra(int s, int t, int n, int** G, vector<int> dist, vector<int> pais)
+void dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
 {
   // inicializa d e p
   for (int i = 0; i < t; i++)
   {
-    dist.at(i) = 100000;
-    pais.at(i)= -1;
+    dist[i] = 100000;
+    pais[i]= -1;
     //cout << dist.at(i) << pais.at(i) <<endl;
   }
   //cout<< dist.size();
@@ -40,47 +40,42 @@ vector<int> dijkstra(int s, int t, int n, int** G, vector<int> dist, vector<int>
     // para cada vizinho do elemento atual
     for (int j = 1; j < n; j++){
         if (G[u.second][j] != INT_MAX){
-            if (dist.at(j) > u.first + G[u.second][j]){
+            if (dist[j] > u.first + G[u.second][j]){
                 //cout<< dist[j] << " " << dist[u.second] << " " << G[u.second][j] << endl;
-                if(dist.at(u.second) == 100000) dist.at(u.second) = 0;
-                dist.at(j) = dist.at(u.second) + G[u.second][j];
-                pais.at(j) = u.second;
-                cout<< "de "<<pais.at(j) <<" a "<< j<<" peso: " << dist.at(j) <<endl;
+                if(dist[u.second] == 100000) dist[u.second] = 0;
+                dist[j] = dist[u.second] + G[u.second][j];
+                pais[j] = u.second;
+                cout<< "de "<<pais[j] <<" a "<< j<<" peso: " << dist[j] <<endl;
                 pq.push({dist[j], j});
                 //cout << "vizinho de " << u.second << ": " << j << ", com a dist na heap: " << dist.at(j) << endl;
             }
         }
     }
-/*    for (auto v : G[u.second]){
-      // se o peso do caminho atual + o peso do caminho do vizinho for menor que o peso atual do vizinho
-      if (d[u.second] + v.second < d[v.first])
-      {
-        // atualiza o peso do vizinho
-        d[v.first] = d[u.second] + v.second;
-        // atualiza o pai do vizinho
-        p[v.first] = u.second;
-        // insere o vizinho na priority queue
-        pq.push({d[v.first], v.first});
-      }
-    }*/
   }
-  return dist, pais;
 }
 
 
 void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G, int n){
-    vector<int> dist(t);
-    vector<int> pais(t);
+    int dist[t];
+    int pais[t];
+    int *ptrDist = dist;
+    int *ptrPais = pais;
     //vector<int> *ptrDist = &dist;
     //vector<int> *ptrPais = &pais;
-    dist, pais = dijkstra(s, t, n, G, dist, pais);
+    dijkstra(s, t, n, G, ptrDist, ptrPais);
     if (saida && solucao){
     // escreve a saida das distancias ordenadas num arquivo txt
         ofstream out;
         out.open(nomeSaida, ofstream::out);
         for (int i = s; i < t; i++)
         {
-        out << "menor peso de " << pais.at(i) <<" a "<< i <<": "<< dist.at(i) << endl;
+          if(i == s){
+            out << "raiz " << i << endl;
+          }else if (pais[i] == -1){
+            out << "nao existe caminho" << endl;
+          }else{
+            out << "menor peso de " << pais[i] <<" a "<< i <<": "<< dist[i] << endl;
+          }
         }
         out.close();
         return;
@@ -91,7 +86,11 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
         out.open(nomeSaida, ofstream::out);
         int sumCaminho=0;
         for(int i = s; i < t; i++){
-            sumCaminho += dist.at(i);
+          if(dist[i] == 100000){
+            continue;
+          }else{
+            sumCaminho += dist[i];
+          }
         }
         out << "peso do menor caminho: "<< sumCaminho << endl;
         out.close();
@@ -99,15 +98,25 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
     }
     if(solucao){
     // exibe no terminal as distancias ordenadas de cada aresta
-    for(int i = s; i < t; i++){
-      cout << "menor peso de " << pais.at(i) <<" a "<< i <<": "<< dist.at(i) << endl;
-    }
+      for(int i = s; i < t; i++){
+        if(i == s){
+          cout << "raiz " << i << endl;
+        }else if (pais[i] == -1){
+          cout << "nao existe caminho" << endl;
+        }else{
+          cout << "menor peso de " << pais[i] <<" a "<< i <<": "<< dist[i] << endl;
+        }
+      }
     return;
     }
     // exibe no terminal o peso do menor caminho
     int sumCaminho=0;
     for(int i = s; i < t; i++){
-        sumCaminho += dist.at(i);
+      if(dist[i] == 100000){
+        continue;
+      }else{
+        sumCaminho += dist[i];
+      }
     }
     
     cout << "peso do menor caminho: "<< sumCaminho << endl;
