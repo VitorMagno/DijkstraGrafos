@@ -56,17 +56,16 @@ void dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
         }
     }
   }
+  return;
 }
 
 
 void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G, int n){
     int dist[t];
     int pais[t];
-    int *ptrDist = dist;
-    int *ptrPais = pais;
     //vector<int> *ptrDist = &dist;
     //vector<int> *ptrPais = &pais;
-    dijkstra(s, t, n, G, ptrDist, ptrPais);
+    dijkstra(s, t, n, G, &dist[0], &pais[0]);
     if (saida && solucao){
     // escreve a saida das distancias ordenadas num arquivo txt
         ofstream out;
