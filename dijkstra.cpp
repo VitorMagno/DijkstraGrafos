@@ -233,5 +233,6 @@ int main(int argc, char const *argv[]){
   }
 
   solutions(saida, nomeSaida, solucao, s, t, G, n);
+  free(G);
   return 0;
 }
