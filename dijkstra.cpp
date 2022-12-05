@@ -14,14 +14,14 @@
 
 using namespace std;
 
-void dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
+int dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
 {
   // inicializa d e p
-  for (int i = 0; i < t; i++)
+  for (int i = s; i <= t; i++)
   {
     dist[i] = 100000;
     pais[i]= -1;
-    //cout << dist.at(i) << pais.at(i) <<endl;
+    //cout << dist[i] << pais[i] <<endl;
   }
   //cout<< dist.size();
   // cria uma priority queue heapmin
@@ -38,7 +38,7 @@ void dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
     if (u.second == t)
     	break;
     // para cada vizinho do elemento atual
-    for (int j = 1; j < n; j++){
+    for (int j = 1; j <= t ; j++){
         if (G[u.second][j] != INT_MAX){
             if (dist[j] > u.first + G[u.second][j]){ // peso do vizinho j > peso do v atual + o caminho para j pelo vertice atual
                 //cout<< "distancia atual segundo o grafo: "<<u.first <<". distancia do "<<u.second << " para "<<j<<": "<<G[u.second][j]<<endl;
@@ -56,21 +56,22 @@ void dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
         }
     }
   }
-  return;
+  return dist[t];
 }
 
 
 void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G, int n){
-    int dist[t];
-    int pais[t];
+    int dist[t+1];
+    int pais[t+1];
+    int custoFinal;
     //vector<int> *ptrDist = &dist;
     //vector<int> *ptrPais = &pais;
-    dijkstra(s, t, n, G, &dist[0], &pais[0]);
+    custoFinal = dijkstra(s, t, n, G, &dist[0], &pais[0]);
     if (saida && solucao){
     // escreve a saida das distancias ordenadas num arquivo txt
         ofstream out;
         out.open(nomeSaida, ofstream::out);
-        for (int i = s; i < t; i++)
+        for (int i = s; i <= t; i++)
         {
           if(i == s){
             out << "raiz " << i << endl;
@@ -87,21 +88,13 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
     // escreve o peso do menor caminho num arquivo txt
         ofstream out;
         out.open(nomeSaida, ofstream::out);
-        int sumCaminho=0;
-        for(int i = s; i < t; i++){
-          if(dist[i] == 100000){
-            continue;
-          }else{
-            sumCaminho += dist[i];
-          }
-        }
-        out << "peso do menor caminho: "<< sumCaminho << endl;
+        out << "Menor caminho da raiz ate o final eh: "<< custoFinal << endl;
         out.close();
         return;
     }
     if(solucao){
     // exibe no terminal as distancias ordenadas de cada aresta
-      for(int i = s; i < t; i++){
+      for(int i = s; i <= t; i++){
         if(i == s){
           cout << "raiz " << i << endl;
         }else if (pais[i] == -1){
@@ -113,16 +106,8 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
     return;
     }
     // exibe no terminal o peso do menor caminho
-    int sumCaminho=0;
-    for(int i = s; i < t; i++){
-      if(dist[i] == 100000){
-        continue;
-      }else{
-        sumCaminho += dist[i];
-      }
-    }
+    cout<<"Menor caminho da raiz ate o final eh: " << custoFinal;
     
-    cout << "peso do menor caminho: "<< sumCaminho << endl;
     return;
 }
 
