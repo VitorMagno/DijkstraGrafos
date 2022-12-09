@@ -61,48 +61,56 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
     int dist[t];
     int pais[t];
     int custoFinal;
-   
     custoFinal = dijkstra(s, t, n, G, &dist[0], &pais[0]);
     if (saida && solucao){
     // escreve a saida das distancias ordenadas num arquivo txt
-        ofstream out;
-        out.open(nomeSaida, ofstream::out);
-        for (int i = s; i < t; i++)
-        {
-          if(i == s){
-            out << "raiz " << i << endl;
-          }else if (pais[i] == -1){
-            out << "nao existe caminho de " << s << " a " << i << endl;
+      ofstream out;
+      out.open(nomeSaida, ofstream::out);
+      string resposta = "";
+      for(int i = s; i < t; i++){
+        while (i > s){
+          if (pais[i] == -1){
+            resposta =  "nao existe caminho de " + to_string(s) + " a " + to_string(i) + resposta;
+            i = s;
           }else{
-            out << "menor caminho de " << s <<" a "<< i <<": "<< dist[i] << endl;
+            resposta = "aresta " + to_string(pais[i]) + " - " + to_string(i) + " custo " + to_string(dist[i]) +"\n" + resposta;
           }
+          i = pais[i];
         }
-        out.close();
-        return;
+      }
+      resposta = "total " + to_string(dist[t]) + resposta;
+      out << resposta <<endl;
+      out.close();
+      return;
     }
     if(saida){
     // escreve o peso do menor caminho num arquivo txt
         ofstream out;
         out.open(nomeSaida, ofstream::out);
-        out << "Menor caminho da raiz ate o final eh: "<< custoFinal << endl;
+        out << "Menor caminho de " << s << " ate " << t-1 << " eh: "<< custoFinal << endl;
         out.close();
         return;
     }
     if(solucao){
-    // exibe no terminal as distancias ordenadas de cada aresta
+      // exibe no terminal as distancias ordenadas de cada aresta
+      string resposta = "";
       for(int i = s; i < t; i++){
-        if(i == s){
-          cout << "raiz " << i << endl;
-        }else if (pais[i] == -1){
-          cout << "nao existe caminho de " << s << " a " << i << endl;
-        }else{
-          cout << "menor caminho de " << s <<" a "<< i <<": "<< dist[i] << endl;
+        while (i > s){
+          if (pais[i] == -1){
+            resposta =  "nao existe caminho de " + to_string(s) + " a " + to_string(i) + resposta;
+            i = s;
+          }else{
+            resposta = "aresta " + to_string(pais[i]) + " - " + to_string(i) + " custo " + to_string(dist[i]) +"\n" + resposta;
+          }
+          i = pais[i];
         }
       }
-    return;
+      resposta = "total " + to_string(dist[t]) + resposta;
+      cout << resposta <<endl;
+      return;
     }
     // exibe no terminal o peso do menor caminho
-    cout<<"Menor caminho de "<< s << " a "<< t-1 <<" eh: " << custoFinal;
+    cout<<"Menor caminho de "<< s << " ate "<< t-1 <<" eh: " << custoFinal;
     
     return;
 }
