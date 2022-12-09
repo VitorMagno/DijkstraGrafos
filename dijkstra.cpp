@@ -95,17 +95,16 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
       // exibe no terminal as distancias ordenadas de cada aresta
       string resposta = "";
       for(int i = s; i < t; i++){
-        while (i > s){
-          if (pais[i] == -1){
-            resposta =  "nao existe caminho de " + to_string(s) + " a " + to_string(i) + resposta;
-            i = s;
-          }else{
-            resposta = "aresta " + to_string(pais[i]) + " - " + to_string(i) + " custo " + to_string(dist[i]) +"\n" + resposta;
-          }
-          i = pais[i];
+        if( i == s){
+          resposta = "raiz " + to_string(i) + "\n" + resposta;
+        }else if (pais[i] == -1){
+          resposta =  "nao existe caminho de " + to_string(s) + " a " + to_string(i) +"\n"+ resposta;
+          i = s;
+        }else{
+          resposta = "pai " + to_string(pais[i]) + " de " + to_string(i) + " custo " + to_string(dist[i]) +"\n" + resposta;
         }
       }
-      resposta = "total " + to_string(dist[t]) + resposta;
+      resposta = "total " + to_string(dist[t-1]) +"\n"+ resposta;
       cout << resposta <<endl;
       return;
     }
