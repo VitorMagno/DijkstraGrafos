@@ -14,10 +14,10 @@
 
 using namespace std;
 
-int dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
+int dijkstra(int verticeInicial, int verticeFinal, int n, int** G, int *dist, int *pais)
 {
   // inicializa d e p
-  for (int i = s; i < t; i++)
+  for (int i = verticeInicial; i <= verticeFinal; i++)
   {
     dist[i] = 100000;
     pais[i]= -1;
@@ -25,60 +25,61 @@ int dijkstra(int s, int t, int n, int** G, int *dist, int *pais)
   }
   
   // cria uma priority queue heapmin
-  priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-  pq.push({0,s});
+  priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> fila;
+  fila.push({0,verticeInicial});
   // enquanto a priority queue nao estiver vazia
-  while (!pq.empty())
+  while (!fila.empty())
   {
     // pega o primeiro elemento da priority queue
-    pair<int,int> u = pq.top();
-    
-    pq.pop();
+    pair<int,int> topoDaFila = fila.top();
+    fila.pop();
+    int verticeAtual = topoDaFila.second;
+    int pesoDoVerticeAtual = topoDaFila.first;
     // se o elemento for o destino, termina
-    if (u.second == t)
+    if (verticeAtual == verticeFinal)
     	break;
     // para cada vizinho do elemento atual
-    for (int j = 1; j < t ; j++){
-        if (G[u.second][j] != INT_MAX){
-            if (dist[j] > u.first + G[u.second][j]){ // peso do vizinho j > peso do v atual + o caminho para j pelo vertice atual
+    for (int vizinho = 1; vizinho <= verticeFinal ; vizinho++){
+        if (G[verticeAtual][vizinho] != INT_MAX){
+            if (dist[vizinho] > pesoDoVerticeAtual + G[verticeAtual][vizinho]){ // peso do vizinho vizinho > peso do v atual + o caminho para vizinho pelo vertice atual
                 
-                if(dist[j] == 100000) dist[j] = 0;
-                dist[u.second] = u.first; 
-                dist[j] = dist[u.second] + G[u.second][j];
-                pais[j] = u.second; 
-                //cout << "atualizando a distancia de "<< j <<" para " << dist[j] << endl;
-                pq.push({dist[j], j});
+                if(dist[vizinho] == 100000) dist[vizinho] = 0;
+                dist[verticeAtual] = pesoDoVerticeAtual; 
+                dist[vizinho] = dist[verticeAtual] + G[verticeAtual][vizinho];
+                pais[vizinho] = verticeAtual; 
+                //cout << "atualizando a distancia de "<< vizinho <<" para " << dist[vizinho] << endl;
+                fila.push({dist[vizinho], vizinho});
                 
             }
         }
     }
   }
-  return dist[t-1];
+  return dist[verticeFinal];
 }
 
 
-void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G, int n){
-    int dist[t];
-    int pais[t];
+void solutions(bool saida, string nomeSaida, bool solucao, int verticeInicial, int verticeFinal, int** G, int n){
+    int dist[n];
+    int pais[n];
     int custoFinal;
-    custoFinal = dijkstra(s, t, n, G, &dist[0], &pais[0]);
+    custoFinal = dijkstra(verticeInicial, verticeFinal, n, G, &dist[0], &pais[0]);
     if (saida && solucao){
     // escreve a saida das distancias ordenadas num arquivo txt
       ofstream out;
       out.open(nomeSaida, ofstream::out);
       string resposta = "";
-      for(int i = s; i < t; i++){
-        while (i > s){
-          if (pais[i] == -1){
-            resposta =  "nao existe caminho de " + to_string(s) + " a " + to_string(i) + resposta;
-            i = s;
-          }else{
-            resposta = "aresta " + to_string(pais[i]) + " - " + to_string(i) + " custo " + to_string(dist[i]) +"\n" + resposta;
-          }
-          i = pais[i];
+      int i = verticeFinal;
+      while (i != verticeInicial) {
+        resposta = to_string(pais[i]) + " - " + to_string(i) +" : " + to_string(dist[i]) + "\n"+ resposta;
+        i = pais[i];
+        if(i == -1){
+          out << "nao existe caminho de " << verticeInicial <<" a " << verticeFinal << endl;
+          out.close();
+          return;
         }
       }
-      resposta = "total " + to_string(dist[t]) + resposta;
+      resposta = "exibindo caminho percorrido de " + to_string(verticeInicial) + " a " + to_string(verticeFinal) + "\n" + resposta;
+      resposta += "custo final " + to_string(dist[verticeFinal]);
       out << resposta <<endl;
       out.close();
       return;
@@ -87,29 +88,29 @@ void solutions(bool saida, string nomeSaida, bool solucao, int s, int t, int** G
     // escreve o peso do menor caminho num arquivo txt
         ofstream out;
         out.open(nomeSaida, ofstream::out);
-        out << "Menor caminho de " << s << " ate " << t-1 << " eh: "<< custoFinal << endl;
+        out << "Menor caminho de " << verticeInicial << " ate " << verticeFinal << " eh: "<< custoFinal << endl;
         out.close();
         return;
     }
     if(solucao){
       // exibe no terminal as distancias ordenadas de cada aresta
       string resposta = "";
-      for(int i = s; i < t; i++){
-        if( i == s){
-          resposta = "raiz " + to_string(i) + "\n" + resposta;
-        }else if (pais[i] == -1){
-          resposta =  "nao existe caminho de " + to_string(s) + " a " + to_string(i) +"\n"+ resposta;
-          i = s;
-        }else{
-          resposta = "pai " + to_string(pais[i]) + " de " + to_string(i) + " custo " + to_string(dist[i]) +"\n" + resposta;
+      int i = verticeFinal;
+      while (i > verticeInicial) {
+        resposta = to_string(pais[i]) + " - " + to_string(i) +" : " + to_string(dist[i]) + "\n"+ resposta;
+        i = pais[i];
+        if(i == -1){
+          cout << "nao existe caminho de " << verticeInicial <<" a " << verticeFinal << endl;
+          return;
         }
       }
-      resposta = "total " + to_string(dist[t-1]) +"\n"+ resposta;
+      resposta = "exibindo caminho percorrido de " + to_string(verticeInicial) + " a " + to_string(verticeFinal) + "\n" + resposta;
+      resposta += "custo final " + to_string(dist[verticeFinal]);
       cout << resposta <<endl;
       return;
     }
     // exibe no terminal o peso do menor caminho
-    cout<<"Menor caminho de "<< s << " ate "<< t-1 <<" eh: " << custoFinal;
+    cout<<"Menor caminho de "<< verticeInicial << " ate "<< verticeFinal <<" eh: " << custoFinal;
     
     return;
 }
@@ -131,8 +132,8 @@ int main(int argc, char const *argv[]){
   string opSaida = "-o";
   string nomeSaida;
   bool saida = false;
-  int s = 1;
-  int t = 999;
+  int verticeInicial = 1;
+  int verticeFinal = 999;
   int** G;
   int n;
 
@@ -158,8 +159,8 @@ int main(int argc, char const *argv[]){
       
       // Usamos +1 pra acessar os vértices pelos seus números. Deixaremos a primeira linha e primeira colunas sem usar.
       G = new int* [qtd_ares+1];
-      n = qtd_ares+1;
-      t = qtd_vert+1;
+      n = qtd_vert + 1;
+      verticeFinal = n - 1;
       for (int y = 0; y <qtd_ares+1; y++){
         G[y] = new int [qtd_ares+1];
       }
@@ -203,25 +204,24 @@ int main(int argc, char const *argv[]){
 
     if (argv[i] == opInicial){
       inicial = true;
-      s = stoi(argv[i+1]);
+      verticeInicial = stoi(argv[i+1]);
     }
 
     if (argv[i] == opFinal){
       final = true;
-      t = stoi(argv[i+1]);
-      t++;
+      verticeFinal = stoi(argv[i+1]);
     }
 
     if (argv[i] == opSaida){
     	saida = true;
-        nomeSaida = argv[i+1];
+      nomeSaida = argv[i+1];
     }
     if(argv[i]== opSolucao){
-        solucao = true;
+      solucao = true;
     }
   }
 
-  solutions(saida, nomeSaida, solucao, s, t, G, n);
+  solutions(saida, nomeSaida, solucao, verticeInicial, verticeFinal, G, n);
   free(G);
   return 0;
 }
