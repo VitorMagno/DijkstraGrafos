@@ -1,4 +1,4 @@
-> #@ Dijkstra
+> ## Dijkstra
 repositorio criado para apresentar algoritmo para ab2 da disciplina de teoria dos grafos.
 > ### Como compilar?
   utilize o comando Make para compilar, certifique-se de que tenha o necessário instalado.
