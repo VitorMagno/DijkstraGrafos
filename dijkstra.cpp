@@ -88,7 +88,7 @@ void solutions(bool saida, string nomeSaida, bool solucao, int verticeInicial, i
     // escreve o peso do menor caminho num arquivo txt
         ofstream out;
         out.open(nomeSaida, ofstream::out);
-        out << "Menor caminho de " << verticeInicial << " ate " << verticeFinal << " eh: "<< custoFinal << endl;
+        out << "Menor caminho de " << verticeInicial << " ate " << verticeFinal << " eh: "<< custoFinal <<" | Pai = " << pais[verticeFinal]<< endl;
         out.close();
         return;
     }
@@ -110,7 +110,7 @@ void solutions(bool saida, string nomeSaida, bool solucao, int verticeInicial, i
       return;
     }
     // exibe no terminal o peso do menor caminho
-    cout<<"Menor caminho de "<< verticeInicial << " ate "<< verticeFinal <<" eh: " << custoFinal;
+    cout<<"Menor caminho de "<< verticeInicial << " ate "<< verticeFinal <<" eh: " << custoFinal << " | Pai = " << pais[verticeFinal] << endl;
     
     return;
 }
