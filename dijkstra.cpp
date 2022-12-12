@@ -70,7 +70,7 @@ void solutions(bool saida, string nomeSaida, bool solucao, int verticeInicial, i
       string resposta = "";
       int i = verticeFinal;
       while (i != verticeInicial) {
-        resposta = to_string(pais[i]) + " - " + to_string(i) +" : " + to_string(dist[i]) + "\n"+ resposta;
+        resposta = to_string(pais[i]) + " -> " + to_string(i) +" : " + to_string(dist[i]) + "\n"+ resposta;
         i = pais[i];
         if(i == -1){
           out << "nao existe caminho de " << verticeInicial <<" a " << verticeFinal << endl;
@@ -97,7 +97,7 @@ void solutions(bool saida, string nomeSaida, bool solucao, int verticeInicial, i
       string resposta = "";
       int i = verticeFinal;
       while (i > verticeInicial) {
-        resposta = to_string(pais[i]) + " - " + to_string(i) +" : " + to_string(dist[i]) + "\n"+ resposta;
+        resposta = to_string(pais[i]) + " -> " + to_string(i) +" : " + to_string(dist[i]) + "\n"+ resposta;
         i = pais[i];
         if(i == -1){
           cout << "nao existe caminho de " << verticeInicial <<" a " << verticeFinal << endl;
